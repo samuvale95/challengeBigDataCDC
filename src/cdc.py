@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 import os
 import glob
 from datetime import datetime
+import hashlib
 
 
 class CDC(ABC):
@@ -36,6 +37,31 @@ class CDC(ABC):
                     os.remove(f)
                 break
 
-    def capture_changes(self, ):
-        pass
+    @abstractmethod
+    def create_file(self, name, value, operation):
+        raise NotImplementedError
 
+    def __find(self, hash, l, t):
+        for i in l:
+            if(i[t] == hash): return True
+        return False
+
+    def capture_changes(self, table_name):
+        sync = self.data_lake.read('sync.json')
+        new_sync=[]
+        db_data = self.data_base.get_data(table_name)
+
+        for data in db_data:
+            _khash = hashlib.sha256(str.encode([v for (k,v) in data['keys'].items()].join(','))).hexdigest()
+            _hash = hashlib.sha256(str.encode([v for (k,v) in data['values'].items()].join(','))).hexdigest()
+
+            if(not self.__find(_khash, sync, 'khash')):
+                self.create_file(datetime.now(), {_hash: data['keys'], _khash: data['values']}, 'insert')
+            else:
+                if(self.__find(_khash, sync, 'khash') and (not  self.__find(_hash, sync, 'hash'))):
+                    self.create_file(datetime.now(), {_hash: data['keys'], _khash: data['values']}, 'update')
+            new_sync.append({'khash': _khash, 'hash': _hash})
+
+            delete_row = set(new_sync).intersection(set(sync))
+            for delete in delete_row:
+                self.create_file(datetime.now(), {delete['hash']: None, delete['khash']: None}, 'delete')
