@@ -17,11 +17,11 @@ class Datalake(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def write(self, data):
+    def write(self, file_name, data, mod):
         raise NotImplementedError
 
     @abstractmethod
-    def ls(self, data):
+    def ls(self, name=None):
         raise NotImplementedError
 
     @abstractmethod
