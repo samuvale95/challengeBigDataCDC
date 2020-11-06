@@ -15,6 +15,8 @@
 So, try to be in the architect shoes and architect your first solution: this is stricly related with all concepts we have seen before the Hadoop lesson, so multiple point of view, various pattern, architectural principle, and so far so on.
 The maximum point achievable is +2, but this time I'll start to given part of the total score only to completely correct solution.
 
+---
+
 ## Solution
 
 ### DB class
@@ -34,6 +36,14 @@ The maximum point achievable is +2, but this time I'll start to given part of th
 	- connessione a DL e DB
 	- send data to dl in a consistency way (transaction) 
 	- change capture method
-	- timing set method 
+	- timing set method
 
+---
 
+## To Do
+
+- Implement `data_log` function
+- Add documentation to all function
+- Define config_object structure
+- Add to `send_to_dl` function a sign to verify if sent data are correct
+- Make an instance of developped class
