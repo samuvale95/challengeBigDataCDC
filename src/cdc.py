@@ -7,15 +7,14 @@ import hashlib
 
 class CDC(ABC):
 
-    def __init__(self, data_lake, data_base, arch_type):
-        self.arch_typee=arch_type
-        self.files_path='{}/'.format(datetime())
+    def __init__(self, data_lake, data_base, config_obj:dict):
+        self.conf=config_obj
         self.data_lake=data_lake
         self.data_base=data_base
 
-    def send_to_dl(self, ):
+    def send_to_dl(self) -> None:
         while(True):
-            list_file = os.listdir(self.files_path)
+            list_file = os.listdir(self.conf['changes_path'])
 
             for change in list_file:
                 with open(change, 'r') as f:
@@ -32,13 +31,13 @@ class CDC(ABC):
                 for f in list_file:
                     self.data_lake.rename('{}.tmp'.format(f.split('.')[0]), f)
 
-                files = glob.glob(self.files_path)
+                files = glob.glob(self.conf['changes_path'])
                 for f in files:
                     os.remove(f)
                 break
 
     @abstractmethod
-    def create_file(self, name, value, operation):
+    def create_file(self, name:str, value:str, operation:str) -> None:
         raise NotImplementedError
 
     def __find(self, hash, l, t):
@@ -46,7 +45,7 @@ class CDC(ABC):
             if(i[t] == hash): return True
         return False
 
-    def capture_changes(self, table_name):
+    def __registry_data(self, table_name:str) -> None:
         sync = self.data_lake.read('sync.json')
         new_sync=[]
         db_data = self.data_base.get_data(table_name)
@@ -65,3 +64,10 @@ class CDC(ABC):
             delete_row = set(new_sync).intersection(set(sync))
             for delete in delete_row:
                 self.create_file(datetime.now(), {delete['hash']: None, delete['khash']: None}, 'delete')
+
+    def __log_data(self, table_name:str) -> None:
+        return NotImplemented
+
+    def capture_changes(self, table_name:str)-> None:
+        if(self.conf['arch_type'] == 'log_data'): self.__log_data(table_name)
+        else: self.__registry_data(table_name)
