@@ -3,6 +3,7 @@ import os
 import glob
 from datetime import datetime
 import hashlib
+import json
 
 
 class CDC(ABC):
@@ -51,7 +52,7 @@ class CDC(ABC):
 
     def create_file(self, file_name:str, value:dict, operation:str=None) -> None:
         path = self.file_struct(file_name, value, operation)
-        os.rename(path, './{}'.format(self.conf['changes_path']))
+        os.rename(path, './{}/{}'.format(self.conf['changes_path'], path))
 
     def __find(self, hash, l, t):
         for i in l:
@@ -59,22 +60,28 @@ class CDC(ABC):
         return False
 
     def __registry_data(self, table_name:str) -> None:
-        sync = self.data_lake.read('sync.json')
+        sync = []
+        try:
+            sync = self.data_lake.read('sync.json')
+        except FileNotFoundError:
+            pass
+
         new_sync=[]
         db_data = self.data_base.exec('SELECT * FROM {}'.format(table_name))
 
         for data in db_data:
-            _khash = hashlib.sha256(str.encode([v for (k,v) in data['keys'].items()].join(','))).hexdigest()
-            _hash = hashlib.sha256(str.encode([v for (k,v) in data['values'].items()].join(','))).hexdigest()
+            _khash = str(hashlib.sha256(str.encode(','.join([v for (k,v) in data['keys'].items()]))).hexdigest())
+            _hash = str(hashlib.sha256(str.encode(','.join([v for (k,v) in data['values'].items()]))).hexdigest())
 
             if(not self.__find(_khash, sync, 'khash')):
-                self.create_file(datetime.now(), {_hash: data['keys'], _khash: data['values']}, 'insert')
+                self.create_file(str(datetime.now()), {_hash: data['keys'], _khash: data['values']}, 'insert')
             else:
                 if(self.__find(_khash, sync, 'khash') and (not  self.__find(_hash, sync, 'hash'))):
-                    self.create_file(datetime.now(), {_hash: data['keys'], _khash: data['values']}, 'update')
+                    self.create_file(str(datetime.now()), {_hash: data['keys'], _khash: data['values']}, 'update')
             new_sync.append({'khash': _khash, 'hash': _hash})
 
-            delete_row = set(new_sync).intersection(set(sync))
+            delete_row = set([str(i) for i in new_sync]).intersection(set([str(i) for i in sync]))
+            delete_row = [json.loads(i) for i in delete_row]
             for delete in delete_row:
                 self.create_file(datetime.now(), {delete['hash']: None, delete['khash']: None}, 'delete')
 
@@ -86,5 +93,9 @@ class CDC(ABC):
             self.create_file(datetime.now(), data)
 
     def capture_changes(self, table_name:str)-> None:
+        os.mkdir(self.conf['changes_path'])
         if(self.conf['arch_type'] == 'log_data'): self.__log_data(table_name)
         else: self.__registry_data(table_name)
+        os.remove
+        self.send_to_dl()
+        os.remove(self.conf['changes_path'])
