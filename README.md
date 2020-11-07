@@ -50,3 +50,4 @@ The maximum point achievable is +2, but this time I'll start to given part of th
 	- test Transaction on `send_to_dl`
 	- test INSERT, UPDATE, REMOVE
 - Refactor all code
+- Resolve bug on UPDATE
