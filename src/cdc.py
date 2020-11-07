@@ -17,6 +17,13 @@ class CDC(ABC):
     """
 
     def __init__(self, data_lake, data_base, config_obj:dict):
+        """[summary]
+
+        Args:
+            data_lake ([type]): [description]
+            data_base ([type]): [description]
+            config_obj (dict): [description]
+        """
         self.conf=config_obj
         self.data_lake=data_lake
         self.data_base=data_base
@@ -50,6 +57,19 @@ class CDC(ABC):
 
     @abstractmethod
     def file_struct(self, file_name:str, value:dict, operation:str=None) -> str:
+        """[summary]
+
+        Args:
+            file_name (str): [description]
+            value (dict): [description]
+            operation (str, optional): [description]. Defaults to None.
+
+        Raises:
+            NotImplementedError: [description]
+
+        Returns:
+            str: [description]
+        """
         raise NotImplementedError
 
     def create_file(self, file_name:str, value:dict, operation:str=None) -> None:
