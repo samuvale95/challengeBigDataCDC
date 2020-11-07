@@ -6,6 +6,15 @@ import hashlib
 
 
 class CDC(ABC):
+    """The aim of this class is capture DataBase changes from t0 to t1 and send that changes to Data Lake like a files.
+    It will be create a file with 'create_file' method for every change happened on Database.
+    The files will be put on a temporary directory (path of this folder will be defined on 'config_object' parameter).
+    In the end all files contained in folder will be send to Data Lake with 'send_to_dl' method.
+    If something will go wrong during execution of method, the previous state off datatlake will be preseve and another attempt will be make.
+
+    Args:
+        ABC ([type]): [description]
+    """
 
     def __init__(self, data_lake, data_base, config_obj:dict):
         self.conf=config_obj
