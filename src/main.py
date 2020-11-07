@@ -59,7 +59,7 @@ class Real_Datalake(dl):
         self.dl_conn = None
 
     def read(self, data) -> str:
-        with open(data, 'r') as f:
+        with open('{}/{}'.format(self.dl_conn, data), 'r') as f:
             return f.read()
 
 
