@@ -41,7 +41,7 @@ class CDC(ABC):
                     self.data_lake.rename('{}.tmp'.format('.'.join(f.split('.')[:-1])), f)
 
                 files = os.listdir(self.conf['changes_path'])
-                print(files)
+
                 for f in files:
                     os.remove('{}/{}'.format(self.conf['changes_path'],f))
                 break
@@ -84,6 +84,8 @@ class CDC(ABC):
             delete_row = [json.loads(i) for i in delete_row]
             for delete in delete_row:
                 self.create_file(datetime.now(), {delete['hash']: None, delete['khash']: None}, 'delete')
+
+        self.data_lake.write('sync.json', json.dumps(new_sync), 'w')
 
     def __log_data(self, table_name:str) -> None:
         sync = self.data_lake.read('sync.json')

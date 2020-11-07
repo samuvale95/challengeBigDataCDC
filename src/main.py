@@ -64,7 +64,6 @@ class Real_Datalake(dl):
 
 
     def write(self, file_name, data, mod) -> None:
-        print('{}/{}'.format(self.dl_conn, file_name))
         with open('{}/{}'.format(self.dl_conn, file_name), mod) as f:
             f.write(data)
 
