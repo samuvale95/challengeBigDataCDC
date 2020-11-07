@@ -86,7 +86,7 @@ class CDC(ABC):
         """
         sync = []
         try:
-            sync = self.data_lake.read('sync.json')
+            sync = json.loads(self.data_lake.read('sync.json'))
         except FileNotFoundError:
             pass
 
@@ -104,7 +104,7 @@ class CDC(ABC):
                     self.create_file(str(datetime.now()), {_hash: data['keys'], _khash: data['values']}, 'update')
             new_sync.append({'khash': _khash, 'hash': _hash})
 
-            delete_row = set([str(i) for i in new_sync]).intersection(set([str(i) for i in sync]))
+            delete_row = set([json.dumps(i) for i in new_sync]).intersection(set([json.dumps(i) for i in sync]))
             delete_row = [json.loads(i) for i in delete_row]
             for delete in delete_row:
                 self.create_file(datetime.now(), {delete['hash']: None, delete['khash']: None}, 'delete')
