@@ -8,7 +8,7 @@ import time
 
 class Real_CDC(CDC):
     def file_struct(self, file_name, value, operation=None):
-        with open(file_name, 'w') as f:
+        with open('{}.json'.format(file_name), 'w') as f:
             if(self.conf['arch_type'] == 'log_data'):
                 data = {
                     'time_stamp': str(datetime.now()),
@@ -64,16 +64,17 @@ class Real_Datalake(dl):
 
 
     def write(self, file_name, data, mod) -> None:
-        with open(file_name, mod) as f:
+        print('{}/{}'.format(self.dl_conn, file_name))
+        with open('{}/{}'.format(self.dl_conn, file_name), mod) as f:
             f.write(data)
 
     def ls(self, path=None) -> list:
         if(path == None):
-            return os.listdir()
-        os.listdir(path)
+            return os.listdir(self.dl_conn)
+        os.listdir('{}/{}'.format(self.dl_conn, path))
 
     def rename(self, old_path:str, new_path:str) -> None:
-        os.rename(old_path, new_path)
+        os.rename('{}/{}'.format(self.dl_conn, old_path), '{}/{}'.format(self.dl_conn, new_path))
 
     def move(self, data):
         raise NotImplementedError
@@ -82,7 +83,7 @@ class Real_Datalake(dl):
         raise NotImplementedError
 
     def delete(self, data):
-        raise NotImplementedError
+        os.remove('{}/{}'.format(self.dl_conn, data))
 
 if __name__ == "__main__":
     data_lake = Real_Datalake({'dl_name':'tmp_dl'})
