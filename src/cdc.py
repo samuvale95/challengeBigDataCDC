@@ -104,7 +104,8 @@ class CDC(ABC):
                     self.create_file(str(datetime.now()), {_hash: data['keys'], _khash: data['values']}, 'update')
             new_sync.append({'khash': _khash, 'hash': _hash})
 
-            delete_row = set([json.dumps(i) for i in new_sync]).intersection(set([json.dumps(i) for i in sync]))
+        if(sync != []):
+            delete_row = set([json.dumps(i) for i in sync]).difference(set([json.dumps(i) for i in new_sync]))
             delete_row = [json.loads(i) for i in delete_row]
             for delete in delete_row:
                 self.create_file(datetime.now(), {delete['hash']: None, delete['khash']: None}, 'delete')
