@@ -196,3 +196,4 @@ pip-selfcheck.json
 src/lib/*
 src/include/*
 src/bin/*
+src/tmp*
