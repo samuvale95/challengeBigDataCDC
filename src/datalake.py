@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 
 class Datalake(ABC):
     def __init__(self, config_obj):
-        self.connect(config_obj)
+        self.dl_conn = self.connect(config_obj)
 
     @abstractmethod
     def connect(self, config_obj):
@@ -13,19 +13,19 @@ class Datalake(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def read(self, data):
+    def read(self, data) -> str:
         raise NotImplementedError
 
     @abstractmethod
-    def write(self, file_name, data, mod):
+    def write(self, file_name, data, mod) -> None:
         raise NotImplementedError
 
     @abstractmethod
-    def ls(self, name=None):
+    def ls(self, path=None) -> list:
         raise NotImplementedError
 
     @abstractmethod
-    def rename(self, data):
+    def rename(self, old_path:str, new_path:str) -> None:
         raise NotImplementedError
 
     @abstractmethod
