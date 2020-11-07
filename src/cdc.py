@@ -22,6 +22,8 @@ class CDC(ABC):
         self.data_base=data_base
 
     def send_to_dl(self) -> None:
+        """[summary]
+        """
         while(True):
             list_file = os.listdir(self.conf['changes_path'])
 
@@ -51,15 +53,37 @@ class CDC(ABC):
         raise NotImplementedError
 
     def create_file(self, file_name:str, value:dict, operation:str=None) -> None:
+        """[summary]
+
+        Args:
+            file_name (str): [description]
+            value (dict): [description]
+            operation (str, optional): [description]. Defaults to None.
+        """
         path = self.file_struct(file_name, value, operation)
         os.rename(path, './{}/{}'.format(self.conf['changes_path'], path))
 
     def __find(self, hash, l, t):
+        """[summary]
+
+        Args:
+            hash (bool): [description]
+            l ([type]): [description]
+            t ([type]): [description]
+
+        Returns:
+            [type]: [description]
+        """
         for i in l:
             if(i[t] == hash): return True
         return False
 
     def __registry_data(self, table_name:str) -> None:
+        """[summary]
+
+        Args:
+            table_name (str): [description]
+        """
         sync = []
         try:
             sync = self.data_lake.read('sync.json')
@@ -88,6 +112,11 @@ class CDC(ABC):
         self.data_lake.write('sync.json', json.dumps(new_sync), 'w')
 
     def __log_data(self, table_name:str) -> None:
+        """[summary]
+
+        Args:
+            table_name (str): [description]
+        """
         sync = self.data_lake.read('sync.json')
         db_data = self.data_base.exec('SELECT * FROM {} WHERE {} > {}'.format(table_name, sync['time_column'], sync['last_value']))
 
@@ -95,6 +124,11 @@ class CDC(ABC):
             self.create_file(datetime.now(), data)
 
     def capture_changes(self, table_name:str)-> None:
+        """[summary]
+
+        Args:
+            table_name (str): [description]
+        """
         os.mkdir(self.conf['changes_path'])
         if(self.conf['arch_type'] == 'log_data'): self.__log_data(table_name)
         else: self.__registry_data(table_name)
