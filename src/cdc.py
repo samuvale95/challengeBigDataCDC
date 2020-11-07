@@ -1,6 +1,5 @@
 from abc import ABC, abstractmethod
 import os
-import glob
 from datetime import datetime
 import hashlib
 import json
@@ -27,23 +26,24 @@ class CDC(ABC):
             list_file = os.listdir(self.conf['changes_path'])
 
             for change in list_file:
-                with open(change, 'r') as f:
-                    self.data_lake.write(str.encode(f.read()), '{}.tmp'.format(change.split('.')[0]), 'w')
+                with open('{}/{}'.format(self.conf['changes_path'], change), 'r') as f:
+                    self.data_lake.write('{}.tmp'.format('.'.join(change.split('.')[:-1])), f.read(), 'w')
 
             cnt=0
             for f in list_file:
-                if self.data_lake.ls('{}.tmp'.format(f.split('.')[0])): cnt+=1
+                if'{}.tmp'.format('.'.join(f.split('.')[:-1])) in self.data_lake.ls(): cnt+=1
 
             if cnt!=len(list_file):
                 for f in list_file:
-                    self.data_lake.remove('{}.tmp'.format(f.split('.')[0]))
+                    self.data_lake.delete('{}.tmp'.format('.'.join(f.split('.')[:-1])))
             else:
                 for f in list_file:
-                    self.data_lake.rename('{}.tmp'.format(f.split('.')[0]), f)
+                    self.data_lake.rename('{}.tmp'.format('.'.join(f.split('.')[:-1])), f)
 
-                files = glob.glob(self.conf['changes_path'])
+                files = os.listdir(self.conf['changes_path'])
+                print(files)
                 for f in files:
-                    os.remove(f)
+                    os.remove('{}/{}'.format(self.conf['changes_path'],f))
                 break
 
     @abstractmethod
@@ -98,4 +98,4 @@ class CDC(ABC):
         else: self.__registry_data(table_name)
         os.remove
         self.send_to_dl()
-        os.remove(self.conf['changes_path'])
+        os.rmdir(self.conf['changes_path'])
