@@ -46,8 +46,12 @@ class CDC(ABC):
                 break
 
     @abstractmethod
-    def create_file(self, name:str, value:str, operation:str) -> None:
+    def file_struct(self, file_name:str, value:dict, operation:str=None) -> str:
         raise NotImplementedError
+
+    def create_file(self, file_name:str, value:dict, operation:str=None) -> None:
+        path = self.file_struct(file_name, value, operation)
+        os.rename(path, './{}'.format(self.conf['changes_path']))
 
     def __find(self, hash, l, t):
         for i in l:
@@ -57,7 +61,7 @@ class CDC(ABC):
     def __registry_data(self, table_name:str) -> None:
         sync = self.data_lake.read('sync.json')
         new_sync=[]
-        db_data = self.data_base.get_data(table_name)
+        db_data = self.data_base.exec('SELECT * FROM {}'.format(table_name))
 
         for data in db_data:
             _khash = hashlib.sha256(str.encode([v for (k,v) in data['keys'].items()].join(','))).hexdigest()
@@ -75,7 +79,11 @@ class CDC(ABC):
                 self.create_file(datetime.now(), {delete['hash']: None, delete['khash']: None}, 'delete')
 
     def __log_data(self, table_name:str) -> None:
-        return NotImplemented
+        sync = self.data_lake.read('sync.json')
+        db_data = self.data_base.exec('SELECT * FROM {} WHERE {} > {}'.format(table_name, sync['time_column'], sync['last_value']))
+
+        for data in db_data:
+            self.create_file(datetime.now(), data)
 
     def capture_changes(self, table_name:str)-> None:
         if(self.conf['arch_type'] == 'log_data'): self.__log_data(table_name)

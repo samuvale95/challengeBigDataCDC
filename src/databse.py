@@ -14,5 +14,5 @@ class Database(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def get_data(self, table_name:str) -> iter(dict):
+    def exec(self, query:str) -> iter(dict):
         raise NotImplementedError
