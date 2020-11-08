@@ -31,13 +31,34 @@ from random import randint
 import os
 
 class Fake_Database(Database):
+    &#34;&#34;&#34;This clas implement a fake database to provide an example for CDC pattern
+    &#34;&#34;&#34;
     def connect(self, config_obj):
+        &#34;&#34;&#34;[summary]
+
+        Args:
+            config_obj (dict): `db_name`: databse name
+
+        Returns:
+            str: return a db_name use like a connection object
+        &#34;&#34;&#34;
         return config_obj[&#39;db_name&#39;]
 
     def disconnect(self):
+        &#34;&#34;&#34;Set db_conn to None
+        &#34;&#34;&#34;
         self.db_conn = None
 
     def exec(self, query:str) -&gt; list:
+        &#34;&#34;&#34;This method execute a fake query and return all databse row
+
+        Args:
+            query (str): Not use for this example
+
+        Returns:
+            list: Iterator that point to first line of result
+        &#34;&#34;&#34;
+
         with open(self.db_conn, &#39;r&#39;) as f:
             result = list()
             head = f.readline()
@@ -57,10 +78,16 @@ class Fake_Database(Database):
         return result
 
     def insert(self):
+        &#34;&#34;&#34;This method made a random insert to provide a way to make some test
+        &#34;&#34;&#34;
+
         with open(self.db_conn, &#39;a&#39;) as f:
             f.write(self.__get_random_record())
 
     def update(self):
+        &#34;&#34;&#34;This method made a random update to provide a way to make some test
+        &#34;&#34;&#34;
+
         with open(self.db_conn, &#39;r&#39;) as f, open(&#39;edit.csv&#39;, &#39;w&#39;) as out:
             cnt=sum(1 for line in open(self.db_conn))
 
@@ -77,6 +104,9 @@ class Fake_Database(Database):
             os.rename(&#39;edit.csv&#39;, self.db_conn)
 
     def delete(self):
+        &#34;&#34;&#34;This method made a random delete to provide a way to make some test
+        &#34;&#34;&#34;
+
         with open(self.db_conn, &#39;r&#39;) as f, open(&#39;edit.csv&#39;, &#39;w&#39;) as out:
             cnt=sum(1 for line in open(self.db_conn))
 
@@ -89,6 +119,12 @@ class Fake_Database(Database):
             os.rename(&#39;edit.csv&#39;, self.db_conn)
 
     def __get_random_record(self):
+        &#34;&#34;&#34;This method return a random record based on a MOCK_DATA.csv structure
+
+        Returns:
+            str: return a random row value in a csv style
+        &#34;&#34;&#34;
+
         s=[&#39;male&#39;, &#39;female&#39;]
         first=str(randint(1000, 1000000))
         last=str(randint(1000, 1000000))
@@ -112,30 +148,46 @@ class Fake_Database(Database):
 <span>(</span><span>config_obj: dict)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>[summary]</p>
+<div class="desc"><p>This clas implement a fake database to provide an example for CDC pattern</p>
+<p>Database constructor</p>
 <h2 id="args">Args</h2>
 <dl>
-<dt><strong><code>ABC</code></strong> :&ensp;<code>[type]</code></dt>
-<dd>[description]</dd>
-</dl>
-<p>[summary]</p>
-<h2 id="args_1">Args</h2>
-<dl>
 <dt><strong><code>config_obj</code></strong> :&ensp;<code>dict</code></dt>
-<dd>[description]</dd>
+<dd>configuration object depents on implementation</dd>
 </dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class Fake_Database(Database):
+    &#34;&#34;&#34;This clas implement a fake database to provide an example for CDC pattern
+    &#34;&#34;&#34;
     def connect(self, config_obj):
+        &#34;&#34;&#34;[summary]
+
+        Args:
+            config_obj (dict): `db_name`: databse name
+
+        Returns:
+            str: return a db_name use like a connection object
+        &#34;&#34;&#34;
         return config_obj[&#39;db_name&#39;]
 
     def disconnect(self):
+        &#34;&#34;&#34;Set db_conn to None
+        &#34;&#34;&#34;
         self.db_conn = None
 
     def exec(self, query:str) -&gt; list:
+        &#34;&#34;&#34;This method execute a fake query and return all databse row
+
+        Args:
+            query (str): Not use for this example
+
+        Returns:
+            list: Iterator that point to first line of result
+        &#34;&#34;&#34;
+
         with open(self.db_conn, &#39;r&#39;) as f:
             result = list()
             head = f.readline()
@@ -155,10 +207,16 @@ class Fake_Database(Database):
         return result
 
     def insert(self):
+        &#34;&#34;&#34;This method made a random insert to provide a way to make some test
+        &#34;&#34;&#34;
+
         with open(self.db_conn, &#39;a&#39;) as f:
             f.write(self.__get_random_record())
 
     def update(self):
+        &#34;&#34;&#34;This method made a random update to provide a way to make some test
+        &#34;&#34;&#34;
+
         with open(self.db_conn, &#39;r&#39;) as f, open(&#39;edit.csv&#39;, &#39;w&#39;) as out:
             cnt=sum(1 for line in open(self.db_conn))
 
@@ -175,6 +233,9 @@ class Fake_Database(Database):
             os.rename(&#39;edit.csv&#39;, self.db_conn)
 
     def delete(self):
+        &#34;&#34;&#34;This method made a random delete to provide a way to make some test
+        &#34;&#34;&#34;
+
         with open(self.db_conn, &#39;r&#39;) as f, open(&#39;edit.csv&#39;, &#39;w&#39;) as out:
             cnt=sum(1 for line in open(self.db_conn))
 
@@ -187,6 +248,12 @@ class Fake_Database(Database):
             os.rename(&#39;edit.csv&#39;, self.db_conn)
 
     def __get_random_record(self):
+        &#34;&#34;&#34;This method return a random record based on a MOCK_DATA.csv structure
+
+        Returns:
+            str: return a random row value in a csv style
+        &#34;&#34;&#34;
+
         s=[&#39;male&#39;, &#39;female&#39;]
         first=str(randint(1000, 1000000))
         last=str(randint(1000, 1000000))
@@ -210,18 +277,26 @@ class Fake_Database(Database):
 <h2 id="args">Args</h2>
 <dl>
 <dt><strong><code>config_obj</code></strong> :&ensp;<code>dict</code></dt>
-<dd>[description]</dd>
+<dd><code>db_name</code>: databse name</dd>
 </dl>
-<h2 id="raises">Raises</h2>
+<h2 id="returns">Returns</h2>
 <dl>
-<dt><code>NotImplementedError</code></dt>
-<dd>[description]</dd>
+<dt><code>str</code></dt>
+<dd>return a db_name use like a connection object</dd>
 </dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def connect(self, config_obj):
+    &#34;&#34;&#34;[summary]
+
+    Args:
+        config_obj (dict): `db_name`: databse name
+
+    Returns:
+        str: return a db_name use like a connection object
+    &#34;&#34;&#34;
     return config_obj[&#39;db_name&#39;]</code></pre>
 </details>
 </dd>
@@ -229,12 +304,15 @@ class Fake_Database(Database):
 <span>def <span class="ident">delete</span></span>(<span>self)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>This method made a random delete to provide a way to make some test</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def delete(self):
+    &#34;&#34;&#34;This method made a random delete to provide a way to make some test
+    &#34;&#34;&#34;
+
     with open(self.db_conn, &#39;r&#39;) as f, open(&#39;edit.csv&#39;, &#39;w&#39;) as out:
         cnt=sum(1 for line in open(self.db_conn))
 
@@ -251,17 +329,14 @@ class Fake_Database(Database):
 <span>def <span class="ident">disconnect</span></span>(<span>self)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>[summary]</p>
-<h2 id="raises">Raises</h2>
-<dl>
-<dt><code>NotImplementedError</code></dt>
-<dd>[description]</dd>
-</dl></div>
+<div class="desc"><p>Set db_conn to None</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def disconnect(self):
+    &#34;&#34;&#34;Set db_conn to None
+    &#34;&#34;&#34;
     self.db_conn = None</code></pre>
 </details>
 </dd>
@@ -269,27 +344,31 @@ class Fake_Database(Database):
 <span>def <span class="ident">exec</span></span>(<span>self, query: str) ‑> list</span>
 </code></dt>
 <dd>
-<div class="desc"><p>[summary]</p>
+<div class="desc"><p>This method execute a fake query and return all databse row</p>
 <h2 id="args">Args</h2>
 <dl>
 <dt><strong><code>query</code></strong> :&ensp;<code>str</code></dt>
-<dd>[description]</dd>
-</dl>
-<h2 id="raises">Raises</h2>
-<dl>
-<dt><code>NotImplementedError</code></dt>
-<dd>[description]</dd>
+<dd>Not use for this example</dd>
 </dl>
 <h2 id="returns">Returns</h2>
 <dl>
 <dt><code>list</code></dt>
-<dd>[description]</dd>
+<dd>Iterator that point to first line of result</dd>
 </dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def exec(self, query:str) -&gt; list:
+    &#34;&#34;&#34;This method execute a fake query and return all databse row
+
+    Args:
+        query (str): Not use for this example
+
+    Returns:
+        list: Iterator that point to first line of result
+    &#34;&#34;&#34;
+
     with open(self.db_conn, &#39;r&#39;) as f:
         result = list()
         head = f.readline()
@@ -313,12 +392,15 @@ class Fake_Database(Database):
 <span>def <span class="ident">insert</span></span>(<span>self)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>This method made a random insert to provide a way to make some test</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def insert(self):
+    &#34;&#34;&#34;This method made a random insert to provide a way to make some test
+    &#34;&#34;&#34;
+
     with open(self.db_conn, &#39;a&#39;) as f:
         f.write(self.__get_random_record())</code></pre>
 </details>
@@ -327,12 +409,15 @@ class Fake_Database(Database):
 <span>def <span class="ident">update</span></span>(<span>self)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>This method made a random update to provide a way to make some test</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def update(self):
+    &#34;&#34;&#34;This method made a random update to provide a way to make some test
+    &#34;&#34;&#34;
+
     with open(self.db_conn, &#39;r&#39;) as f, open(&#39;edit.csv&#39;, &#39;w&#39;) as out:
         cnt=sum(1 for line in open(self.db_conn))
 
