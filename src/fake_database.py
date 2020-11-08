@@ -40,7 +40,9 @@ class Fake_Database(Database):
             update=randint(1,cnt)
             for line in f:
                 if(index==update):
-                    out.write(self.__get_random_record())
+                    l = line.split(',')
+                    l[-1] = self.__get_random_record().split(',')[-1]
+                    out.write(','.join(l))
                 else:
                     out.write(line)
                 index+=1
