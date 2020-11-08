@@ -19,14 +19,22 @@ class CDC(ABC):
         Args:
             data_lake ([Datalake]): Datalake object
             data_base (Databse): Database object
-            config_obj (dict): Configuration object
+            config_obj (dict): Configuration object `changes_path` is path for tmp folder, `arch_type` id the architecture over dcd work 'log_data', 'registry_data'
         """
         self.conf=config_obj
         self.data_lake=data_lake
         self.data_base=data_base
 
     def send_to_dl(self) -> None:
-        """[summary]
+        """Function that send file from tmp folder to datalake inside a transaction. If something fail during this operation Datalake is retore to the previos state, and another attempt will be make.
+
+        Algorithm explanation
+        ---------------------
+
+        This algorithms take every file inside tmp folder and one by one is send to datalake and is save with .tmp extension.
+        In the end, when all file will be copy on datalake, all file with .tmp extension will be rename with correct one.ABC
+        If for any reason some file fail to send or some exceptio was rais, the operation will be interrupt and all file with .tmp extension on datalake will be deleted.
+        The send operation will make another attemp until all file will be sent.
         """
         while(True):
             list_file = os.listdir(self.conf['changes_path'])
@@ -54,42 +62,45 @@ class CDC(ABC):
 
     @abstractmethod
     def file_struct(self, file_name:str, value:dict, operation:str=None) -> str:
-        """[summary]
+        """This method allow to make a personal file structure, that will be save on Datalake
 
         Args:
-            file_name (str): [description]
-            value (dict): [description]
-            operation (str, optional): [description]. Defaults to None.
+            file_name (str):
+            value (dict): the value of the change captured over db. If operation is `DELETE` value will be `None`
+            operation (str, optional): Type of operation that cause a change over database. Possible value `INSERT`, `UPDATE`, `DELETE`. Defaults to None.
 
         Raises:
-            NotImplementedError: [description]
+            NotImplementedError: This method must be implemented on concreate implementation of class.
 
         Returns:
-            str: [description]
+            str: that reflect file structure
         """
         raise NotImplementedError
 
     def create_file(self, file_name:str, value:dict, operation:str=None) -> None:
-        """[summary]
+        """This class call `file_struct` method, and save a file with capure changes on temporary folder.
 
         Args:
-            file_name (str): [description]
-            value (dict): [description]
-            operation (str, optional): [description]. Defaults to None.
+            file_name (str):
+            value (dict): the value of the change captured over db. If operation is `DELETE` value will be `None`
+            operation (str, optional): Type of operation that cause a change over database. Possible value `INSERT`, `UPDATE`, `DELETE`. Defaults to None.
+
+        Raises:
+            NotImplementedError: This method must be implemented on concreate implementation of class.
         """
         path = self.file_struct(file_name, value, operation)
         os.rename(path, './{}/{}'.format(self.conf['changes_path'], path))
 
     def __find(self, hash, l, t):
-        """[summary]
+        """Private class method use to find a hash inside a list of dict
 
         Args:
-            hash (bool): [description]
-            l ([type]): [description]
-            t ([type]): [description]
+            hash (str): hash value
+            l ([type]): list of dict
+            t ([type]): key value
 
         Returns:
-            [type]: [description]
+            [bool]: True if element is find, else False
         """
         for i in l:
             if(i[t] == hash): return True
@@ -144,10 +155,10 @@ class CDC(ABC):
             self.create_file(datetime.now(), data)
 
     def capture_changes(self, table_name:str)-> None:
-        """[summary]
+        """This method call `log_data` or `registry_data` depends on architecture declared on `configuration object`
 
         Args:
-            table_name (str): [description]
+            table_name (str): name of table over capture the changes
         """
         os.mkdir(self.conf['changes_path'])
         if(self.conf['arch_type'] == 'log_data'): self.__log_data(table_name)

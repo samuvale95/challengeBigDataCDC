@@ -6,7 +6,7 @@ class Datalake(ABC):
     Args:
         ABC ([type]): [description]
     """
-    
+
     def __init__(self, config_obj):
         """[summary]
 
