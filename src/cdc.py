@@ -11,18 +11,15 @@ class CDC(ABC):
     The files will be put on a temporary directory (path of this folder will be defined on 'config_object' parameter).
     In the end all files contained in folder will be send to Data Lake with 'send_to_dl' method.
     If something will go wrong during execution of method, the previous state off datatlake will be preseve and another attempt will be make.
-
-    Args:
-        ABC ([type]): [description]
     """
 
     def __init__(self, data_lake, data_base, config_obj:dict):
-        """[summary]
+        """CDC Constructor
 
         Args:
-            data_lake ([type]): [description]
-            data_base ([type]): [description]
-            config_obj (dict): [description]
+            data_lake ([Datalake]): Datalake object
+            data_base (Databse): Database object
+            config_obj (dict): Configuration object
         """
         self.conf=config_obj
         self.data_lake=data_lake
