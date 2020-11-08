@@ -101,18 +101,20 @@ class CDC(ABC):
         Args:
             table_name (str): [description]
         """
-        sync = []
+        sync=[]
         try:
             sync = json.loads(self.data_lake.read('sync.json'))
         except FileNotFoundError:
             pass
 
+        db_keys=[]
         new_sync=[]
         db_data = self.data_base.exec('SELECT * FROM {}'.format(table_name))
 
         for data in db_data:
             _khash = str(hashlib.sha256(str.encode(','.join([v for (k,v) in data['keys'].items()]))).hexdigest())
             _hash = str(hashlib.sha256(str.encode(','.join([v for (k,v) in data['values'].items()]))).hexdigest())
+            db_keys.append(_khash)
 
             if(not self.__find(_khash, sync, 'khash')):
                 self.create_file(str(datetime.now()), {_hash: data['keys'], _khash: data['values']}, 'insert')
@@ -121,11 +123,11 @@ class CDC(ABC):
                     self.create_file(str(datetime.now()), {_hash: data['keys'], _khash: data['values']}, 'update')
             new_sync.append({'khash': _khash, 'hash': _hash})
 
+
         if(sync != []):
-            delete_row = set([json.dumps(i) for i in sync]).difference(set([json.dumps(i) for i in new_sync]))
-            delete_row = [json.loads(i) for i in delete_row]
-            for delete in delete_row:
-                self.create_file(datetime.now(), {delete['hash']: None, delete['khash']: None}, 'delete')
+            delete_row = set([i['khash'] for i in sync]).difference(set(db_keys))
+            for delete in [i for i in sync if i['khash'] in delete_row]:
+                self.create_file(datetime.now(), {delete['khash']: None, delete['hash']: None}, 'delete')
 
         self.data_lake.write('sync.json', json.dumps(new_sync), 'w')
 
