@@ -1,95 +1,59 @@
-from cdc import CDC
-from database import Database as db
-from datalake import Datalake as dl
-from datetime import datetime
-import json
+from real_cdc import Real_CDC
+from fake_database import Fake_Database
+from fake_datalake import Fake_Datalake
 import os
-import time
-
-class Real_CDC(CDC):
-    def file_struct(self, file_name, value, operation=None):
-        with open('{}.json'.format(file_name), 'w') as f:
-            if(self.conf['arch_type'] == 'log_data'):
-                data = {
-                    'time_stamp': str(datetime.now()),
-                    'db_value': value
-                }
-            else:
-                data = {
-                    'time_stamp': str(datetime.now()),
-                    'db_value': value,
-                    'op_type': operation
-                }
-            f.write(json.dumps(data))
-        return f.name
+from shutil import copyfile
 
 
-class Mock_Registry_Database(db):
-    def connect(self, config_obj):
-        return config_obj['db_name']
-
-    def disconnect(self):
-        self.db_conn = None
-
-    def exec(self, query:str) -> list:
-        with open(self.db_conn, 'r') as f:
-            result = list()
-            head = f.readline()
-            for line in f:
-                line = line.split(',')
-                result.append({
-                        'keys': {
-                            head[0]: line[0],
-                            head[1]: line[1]
-                        },
-                        'values': {
-                            head[2]: line[2],
-                            head[3]: line[3],
-                            head[4]: line[4]
-                        }
-                    })
-        return result
-
-class Real_Datalake(dl):
-
-    def connect(self, conf_obj):
-        return conf_obj['dl_name']
-
-    def disconnect(self):
-        self.dl_conn = None
-
-    def read(self, data) -> str:
-        with open('{}/{}'.format(self.dl_conn, data), 'r') as f:
-            return f.read()
-
-
-    def write(self, file_name, data, mod) -> None:
-        with open('{}/{}'.format(self.dl_conn, file_name), mod) as f:
-            f.write(data)
-
-    def ls(self, path=None) -> list:
-        if(path == None):
-            return os.listdir(self.dl_conn)
-        os.listdir('{}/{}'.format(self.dl_conn, path))
-
-    def rename(self, old_path:str, new_path:str) -> None:
-        os.rename('{}/{}'.format(self.dl_conn, old_path), '{}/{}'.format(self.dl_conn, new_path))
-
-    def move(self, data):
-        raise NotImplementedError
-
-    def mkdir(self, data):
-        raise NotImplementedError
-
-    def delete(self, data):
-        os.remove('{}/{}'.format(self.dl_conn, data))
+def test_dl_num_files(num, name):
+    dl_len = len(os.listdir('tmp_dl'))
+    assert num == dl_len, '{} FAIL: expected {}, instead value was {}'.format(name, num, dl_len)
+    print('{}: TEST OK'.format(name))
 
 if __name__ == "__main__":
-    data_lake = Real_Datalake({'dl_name':'tmp_dl'})
-    data_base = Mock_Registry_Database({'db_name':'MOCK_DATA.csv'})
+    copyfile('MOCK_DATA.csv', 'TEST_MOCK_DATA.csv')
+
+    data_lake = Fake_Datalake({'dl_name':'tmp_dl'})
+    data_base = Fake_Database({'db_name':'TEST_MOCK_DATA.csv'})
     cdc = Real_CDC(data_lake, data_base, {
             'arch_type': 'registry_data',
             'changes_path': 'tmp'
         })
 
-    cdc.capture_changes('')
+    try:
+        #Datalake is empty, no changes detected yet
+        test_dl_num_files(0, 'Test empty DL')
+
+        #DB is firt time run, all db line will be processed and put on datalake
+        cdc.capture_changes('')
+
+        #20 line for datalake was changed
+        test_dl_num_files(21, 'Firt DB Check')
+
+        #insert 3 line, 3 file will be insert on datalake
+        for i in range(0, 3):
+            data_base.insert()
+
+        cdc.capture_changes('')
+
+        test_dl_num_files(24, 'Insert test')
+
+        #delete one row, one file will be put on datalake
+        data_base.delete()
+
+        cdc.capture_changes('')
+
+        test_dl_num_files(25, 'Delete Test')
+
+        # one line updated, one file wil be put on datalake
+        data_base.update()
+
+        cdc.capture_changes('')
+
+        test_dl_num_files(26, 'Update Test')
+    except AssertionError as ass_err:
+        # for f in os.listdir('tmp_dl'):
+        #     os.remove('{}/{}'.format('tmp_dl',f))
+        print(ass_err)
+
+    # os.remove('TEST_MOCK_DATA.csv')
