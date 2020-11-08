@@ -51,9 +51,18 @@ if __name__ == "__main__":
         cdc.capture_changes('')
 
         test_dl_num_files(26, 'Update Test')
+
+        data_base.update()
+        data_base.insert()
+        data_base.delete()
+
+        cdc.capture_changes('')
+
+        test_dl_num_files(29, 'Update, Insert, Delete Test')
+
     except AssertionError as ass_err:
-        # for f in os.listdir('tmp_dl'):
-        #     os.remove('{}/{}'.format('tmp_dl',f))
+        for f in os.listdir('tmp_dl'):
+            os.remove('{}/{}'.format('tmp_dl',f))
         print(ass_err)
 
-    # os.remove('TEST_MOCK_DATA.csv')
+    os.remove('TEST_MOCK_DATA.csv')
