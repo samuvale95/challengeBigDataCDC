@@ -40,7 +40,7 @@ The maximum point achievable is +2, but this time I'll start to given part of th
 
 ---
 
-## To Do
+### To Do
 
 - Add documentation to all function
 - Add to `send_to_dl` function a sign to verify if sent data are correct
@@ -51,3 +51,6 @@ The maximum point achievable is +2, but this time I'll start to given part of th
 	- test INSERT, UPDATE, REMOVE
 - Refactor all code
 - Resolve bug on UPDATE
+
+### Important Note
+To execute succesfully you have to create a directory named **tmp_dl** and put it in the *src* directory.
