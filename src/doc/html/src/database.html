@@ -29,53 +29,50 @@
 <pre><code class="python">from abc import ABC, abstractmethod
 
 class Database(ABC):
-    &#34;&#34;&#34;[summary]
-
-    Args:
-        ABC ([type]): [description]
+    &#34;&#34;&#34;This class is a template to implement a real Database class
     &#34;&#34;&#34;
 
     def __init__(self, config_obj:dict):
-        &#34;&#34;&#34;[summary]
+        &#34;&#34;&#34;Database constructor
 
         Args:
-            config_obj (dict): [description]
+            config_obj (dict): configuration object depents on implementation
         &#34;&#34;&#34;
         self.db_conn = self.connect(config_obj)
 
     @abstractmethod
     def connect(self, config_obj:dict):
-        &#34;&#34;&#34;[summary]
+        &#34;&#34;&#34;This method allow to connect a database
 
         Args:
-            config_obj (dict): [description]
+            config_obj (dict): configuration object
 
         Raises:
-            NotImplementedError: [description]
+            NotImplementedError: This method must be implemented in a concrete class
         &#34;&#34;&#34;
         raise NotImplementedError
 
     @abstractmethod
     def disconnect(self):
-        &#34;&#34;&#34;[summary]
+        &#34;&#34;&#34;This method allow to disconnect the database
 
         Raises:
-            NotImplementedError: [description]
+            NotImplementedError: This method must be implemented in a concrete class
         &#34;&#34;&#34;
         raise NotImplementedError
 
     @abstractmethod
     def exec(self, query:str) -&gt; list:
-        &#34;&#34;&#34;[summary]
+        &#34;&#34;&#34;This method allow to execute a query to databse
 
         Args:
-            query (str): [description]
+            query (str): query string
 
         Raises:
-            NotImplementedError: [description]
+            NotImplementedError: This method must be implemented in a concrete class
 
         Returns:
-            list: [description]
+            list: Iterator that point to query result
         &#34;&#34;&#34;
         raise NotImplementedError</code></pre>
 </details>
@@ -94,70 +91,62 @@ class Database(ABC):
 <span>(</span><span>config_obj: dict)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>[summary]</p>
+<div class="desc"><p>This class is a template to implement a real Database class</p>
+<p>Database constructor</p>
 <h2 id="args">Args</h2>
 <dl>
-<dt><strong><code>ABC</code></strong> :&ensp;<code>[type]</code></dt>
-<dd>[description]</dd>
-</dl>
-<p>[summary]</p>
-<h2 id="args_1">Args</h2>
-<dl>
 <dt><strong><code>config_obj</code></strong> :&ensp;<code>dict</code></dt>
-<dd>[description]</dd>
+<dd>configuration object depents on implementation</dd>
 </dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class Database(ABC):
-    &#34;&#34;&#34;[summary]
-
-    Args:
-        ABC ([type]): [description]
+    &#34;&#34;&#34;This class is a template to implement a real Database class
     &#34;&#34;&#34;
 
     def __init__(self, config_obj:dict):
-        &#34;&#34;&#34;[summary]
+        &#34;&#34;&#34;Database constructor
 
         Args:
-            config_obj (dict): [description]
+            config_obj (dict): configuration object depents on implementation
         &#34;&#34;&#34;
         self.db_conn = self.connect(config_obj)
 
     @abstractmethod
     def connect(self, config_obj:dict):
-        &#34;&#34;&#34;[summary]
+        &#34;&#34;&#34;This method allow to connect a database
 
         Args:
-            config_obj (dict): [description]
+            config_obj (dict): configuration object
 
         Raises:
-            NotImplementedError: [description]
+            NotImplementedError: This method must be implemented in a concrete class
         &#34;&#34;&#34;
         raise NotImplementedError
 
     @abstractmethod
     def disconnect(self):
-        &#34;&#34;&#34;[summary]
+        &#34;&#34;&#34;This method allow to disconnect the database
 
         Raises:
-            NotImplementedError: [description]
+            NotImplementedError: This method must be implemented in a concrete class
         &#34;&#34;&#34;
         raise NotImplementedError
 
     @abstractmethod
     def exec(self, query:str) -&gt; list:
-        &#34;&#34;&#34;[summary]
+        &#34;&#34;&#34;This method allow to execute a query to databse
 
         Args:
-            query (str): [description]
+            query (str): query string
 
         Raises:
-            NotImplementedError: [description]
+            NotImplementedError: This method must be implemented in a concrete class
 
         Returns:
-            list: [description]
+            list: Iterator that point to query result
         &#34;&#34;&#34;
         raise NotImplementedError</code></pre>
 </details>
@@ -171,16 +160,16 @@ class Database(ABC):
 <span>def <span class="ident">connect</span></span>(<span>self, config_obj: dict)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>[summary]</p>
+<div class="desc"><p>This method allow to connect a database</p>
 <h2 id="args">Args</h2>
 <dl>
 <dt><strong><code>config_obj</code></strong> :&ensp;<code>dict</code></dt>
-<dd>[description]</dd>
+<dd>configuration object</dd>
 </dl>
 <h2 id="raises">Raises</h2>
 <dl>
 <dt><code>NotImplementedError</code></dt>
-<dd>[description]</dd>
+<dd>This method must be implemented in a concrete class</dd>
 </dl></div>
 <details class="source">
 <summary>
@@ -188,13 +177,13 @@ class Database(ABC):
 </summary>
 <pre><code class="python">@abstractmethod
 def connect(self, config_obj:dict):
-    &#34;&#34;&#34;[summary]
+    &#34;&#34;&#34;This method allow to connect a database
 
     Args:
-        config_obj (dict): [description]
+        config_obj (dict): configuration object
 
     Raises:
-        NotImplementedError: [description]
+        NotImplementedError: This method must be implemented in a concrete class
     &#34;&#34;&#34;
     raise NotImplementedError</code></pre>
 </details>
@@ -203,11 +192,11 @@ def connect(self, config_obj:dict):
 <span>def <span class="ident">disconnect</span></span>(<span>self)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>[summary]</p>
+<div class="desc"><p>This method allow to disconnect the database</p>
 <h2 id="raises">Raises</h2>
 <dl>
 <dt><code>NotImplementedError</code></dt>
-<dd>[description]</dd>
+<dd>This method must be implemented in a concrete class</dd>
 </dl></div>
 <details class="source">
 <summary>
@@ -215,10 +204,10 @@ def connect(self, config_obj:dict):
 </summary>
 <pre><code class="python">@abstractmethod
 def disconnect(self):
-    &#34;&#34;&#34;[summary]
+    &#34;&#34;&#34;This method allow to disconnect the database
 
     Raises:
-        NotImplementedError: [description]
+        NotImplementedError: This method must be implemented in a concrete class
     &#34;&#34;&#34;
     raise NotImplementedError</code></pre>
 </details>
@@ -227,21 +216,21 @@ def disconnect(self):
 <span>def <span class="ident">exec</span></span>(<span>self, query: str) ‑> list</span>
 </code></dt>
 <dd>
-<div class="desc"><p>[summary]</p>
+<div class="desc"><p>This method allow to execute a query to databse</p>
 <h2 id="args">Args</h2>
 <dl>
 <dt><strong><code>query</code></strong> :&ensp;<code>str</code></dt>
-<dd>[description]</dd>
+<dd>query string</dd>
 </dl>
 <h2 id="raises">Raises</h2>
 <dl>
 <dt><code>NotImplementedError</code></dt>
-<dd>[description]</dd>
+<dd>This method must be implemented in a concrete class</dd>
 </dl>
 <h2 id="returns">Returns</h2>
 <dl>
 <dt><code>list</code></dt>
-<dd>[description]</dd>
+<dd>Iterator that point to query result</dd>
 </dl></div>
 <details class="source">
 <summary>
@@ -249,16 +238,16 @@ def disconnect(self):
 </summary>
 <pre><code class="python">@abstractmethod
 def exec(self, query:str) -&gt; list:
-    &#34;&#34;&#34;[summary]
+    &#34;&#34;&#34;This method allow to execute a query to databse
 
     Args:
-        query (str): [description]
+        query (str): query string
 
     Raises:
-        NotImplementedError: [description]
+        NotImplementedError: This method must be implemented in a concrete class
 
     Returns:
-        list: [description]
+        list: Iterator that point to query result
     &#34;&#34;&#34;
     raise NotImplementedError</code></pre>
 </details>

@@ -1,67 +1,61 @@
 from abc import ABC, abstractmethod
 
 class Datalake(ABC):
-    """[summary]
-
-    Args:
-        ABC ([type]): [description]
+    """This class is a template to implement a real Datalake class
     """
 
     def __init__(self, config_obj):
-        """[summary]
+        """Datalake construnctor constructor
 
         Args:
-            config_obj ([type]): [description]
+            config_obj (dict): configuration object depend on implementation
         """
         self.dl_conn = self.connect(config_obj)
 
     @abstractmethod
     def connect(self, config_obj):
-        """[summary]
-
-        Args:
-            config_obj ([type]): [description]
+        """Connection method
 
         Raises:
-            NotImplementedError: [description]
+            NotImplementedError: This method must be implemented in a concrete class
         """
         raise NotImplementedError
 
     @abstractmethod
     def disconnect(self):
-        """[summary]
+        """Disconnect method
 
         Raises:
-            NotImplementedError: [description]
+            NotImplementedError: This method must be implemented in a concrete class
         """
         raise NotImplementedError
 
     @abstractmethod
     def read(self, data) -> str:
-        """[summary]
+        """This method allow to read some file from datalake
 
         Args:
-            data ([type]): [description]
+            data (str): path to file
 
         Raises:
-            NotImplementedError: [description]
+            NotImplementedError: This method must be implemented in a concrete class
 
         Returns:
-            str: [description]
+            str: Return an iterator that point to first line of file
         """
         raise NotImplementedError
 
     @abstractmethod
     def write(self, file_name, data, mod) -> None:
-        """[summary]
+        """This method allow to write in append or write mode a file inside datalake
 
         Args:
-            file_name ([type]): [description]
-            data ([type]): [description]
-            mod ([type]): [description]
+            file_name (str): file name
+            data (str): value to write inside a file
+            mod (str): mod allow are `a` or `w`
 
         Raises:
-            NotImplementedError: [description]
+            NotImplementedError: This method must be implemented in a concrete class
         """
         raise NotImplementedError
 
@@ -73,7 +67,7 @@ class Datalake(ABC):
             path ([type], optional): [description]. Defaults to None.
 
         Raises:
-            NotImplementedError: [description]
+            NotImplementedError: This method must be implemented in a concrete class
 
         Returns:
             list: [description]
@@ -82,49 +76,50 @@ class Datalake(ABC):
 
     @abstractmethod
     def rename(self, old_path:str, new_path:str) -> None:
-        """[summary]
+        """This method allow to rename a file inside datalake
 
         Args:
-            old_path (str): [description]
-            new_path (str): [description]
+            old_path (str): old path to file
+            new_path (str): new path to file
 
         Raises:
-            NotImplementedError: [description]
+            NotImplementedError: This method must be implemented in a concrete class
         """
         raise NotImplementedError
 
     @abstractmethod
-    def move(self, data):
-        """[summary]
+    def move(self, old_path, new_path):
+        """This method allow to move some file from a pth to another
 
         Args:
-            data ([type]): [description]
+            old_path(str): old path to file
+            new_path(str): new path to file
 
         Raises:
-            NotImplementedError: [description]
+            NotImplementedError: This method must be implemented in a concrete class
         """
         raise NotImplementedError
 
     @abstractmethod
     def mkdir(self, data):
-        """[summary]
+        """This method allow to create a new folder inside datalake
 
         Args:
-            data ([type]): [description]
+           data (str): folder name
 
         Raises:
-            NotImplementedError: [description]
+            NotImplementedError: This method must be implemented in a concrete class
         """
         raise NotImplementedError
 
     @abstractmethod
     def delete(self, data):
-        """[summary]
+        """This method allow to delete a file inside a datalake
 
         Args:
-            data ([type]): [description]
+            data (str): file name
 
         Raises:
-            NotImplementedError: [description]
+            NotImplementedError: This method must be implemented in a concrete class
         """
         raise NotImplementedError

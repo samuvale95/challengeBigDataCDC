@@ -107,10 +107,18 @@ class CDC(ABC):
         return False
 
     def __registry_data(self, table_name:str) -> None:
-        """[summary]
+        """This method apply algorith to capture changes from db, registry data table is a db table where is not present time stamp on inserted value.
+
+        Algorithm explanation
+        ---------------------
+
+        The algorithms take a data from Database and for every row make a hash of a keys `khash` and hash of a values `hash`.
+        If khash created from db not exist inside `sync` file, this row is new, is created new file with `INSERT` tag and add to tmp folder.
+        If khash exist inside sync file it means that the value has been modified, it is created new file with `UPDATE` file and add to tmp folder.
+        If there are some row inside a sync file that hasn't been checked it means there was a delete inside a db, it is create a new file with `DELETE` tag and add to tmp folder
 
         Args:
-            table_name (str): [description]
+            table_name (str): name of table over capture the changes
         """
         sync=[]
         try:
@@ -143,10 +151,17 @@ class CDC(ABC):
         self.data_lake.write('sync.json', json.dumps(new_sync), 'w')
 
     def __log_data(self, table_name:str) -> None:
-        """[summary]
+        """This method apply algorith to capture changes from db, log data table is a db table where is present time stamp on inserted every value and also the operation applied.
+
+        Algorithm explanation
+        ---------------------
+
+        The algorithms take a `sync` file from datalake a from that file take last time stamp checked.
+        With this time stamp make a query on db and take all data where insert data is grather than timestamp toke from `sync` file.
+        Row by row from query result is create a file and add to a tmp folder.
 
         Args:
-            table_name (str): [description]
+            table_name (str): name of table over capture the changes
         """
         sync = self.data_lake.read('sync.json')
         db_data = self.data_base.exec('SELECT * FROM {} WHERE {} > {}'.format(table_name, sync['time_column'], sync['last_value']))

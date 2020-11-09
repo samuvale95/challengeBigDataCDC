@@ -1,52 +1,49 @@
 from abc import ABC, abstractmethod
 
 class Database(ABC):
-    """[summary]
-
-    Args:
-        ABC ([type]): [description]
+    """This class is a template to implement a real Database class
     """
 
     def __init__(self, config_obj:dict):
-        """[summary]
+        """Database constructor
 
         Args:
-            config_obj (dict): [description]
+            config_obj (dict): configuration object depents on implementation
         """
         self.db_conn = self.connect(config_obj)
 
     @abstractmethod
     def connect(self, config_obj:dict):
-        """[summary]
+        """This method allow to connect a database
 
         Args:
-            config_obj (dict): [description]
+            config_obj (dict): configuration object
 
         Raises:
-            NotImplementedError: [description]
+            NotImplementedError: This method must be implemented in a concrete class
         """
         raise NotImplementedError
 
     @abstractmethod
     def disconnect(self):
-        """[summary]
+        """This method allow to disconnect the database
 
         Raises:
-            NotImplementedError: [description]
+            NotImplementedError: This method must be implemented in a concrete class
         """
         raise NotImplementedError
 
     @abstractmethod
     def exec(self, query:str) -> list:
-        """[summary]
+        """This method allow to execute a query to databse
 
         Args:
-            query (str): [description]
+            query (str): query string
 
         Raises:
-            NotImplementedError: [description]
+            NotImplementedError: This method must be implemented in a concrete class
 
         Returns:
-            list: [description]
+            list: Iterator that point to query result
         """
         raise NotImplementedError

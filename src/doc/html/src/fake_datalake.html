@@ -30,37 +30,100 @@
 import os
 
 class Fake_Datalake(Datalake):
+    &#34;&#34;&#34;This clas implement a fake datalake to provide an example for CDC pattern
+    &#34;&#34;&#34;
 
     def connect(self, conf_obj):
+        &#34;&#34;&#34;This method provide e way to connect a Datalake
+
+        Args:
+            conf_obj (dict): `dl_name`: datalake name
+
+        Returns:
+            str: datalake name
+        &#34;&#34;&#34;
         return conf_obj[&#39;dl_name&#39;]
 
     def disconnect(self):
+        &#34;&#34;&#34;This method allow to disconnect a Datalake, set dl_conn to None
+        &#34;&#34;&#34;
         self.dl_conn = None
 
     def read(self, data) -&gt; str:
+        &#34;&#34;&#34;This method implement a read operation
+
+        Args:
+            data (str): file name to read
+
+        Returns:
+            str: Iterator to a file
+        &#34;&#34;&#34;
         with open(&#39;{}/{}&#39;.format(self.dl_conn, data), &#39;r&#39;) as f:
             return f.read()
 
 
     def write(self, file_name, data, mod) -&gt; None:
+        &#34;&#34;&#34;This method allow to write a file inside datalake
+
+        Args:
+            file_name (str): file name
+            data (str): data to write inside a file
+            mod (str): allow mod `w` or `a`
+        &#34;&#34;&#34;
         with open(&#39;{}/{}&#39;.format(self.dl_conn, file_name), mod) as f:
             f.write(data)
 
     def ls(self, path=None) -&gt; list:
+        &#34;&#34;&#34;This method allow to get a list of all file contained inside a datalake
+
+        Args:
+            path (str, optional): [description]. path to a specific folder inside datalake. Defaults to None.
+
+        Returns:
+            list: All file inside a folder
+        &#34;&#34;&#34;
         if(path == None):
             return os.listdir(self.dl_conn)
         os.listdir(&#39;{}/{}&#39;.format(self.dl_conn, path))
 
     def rename(self, old_path:str, new_path:str) -&gt; None:
+        &#34;&#34;&#34;This method allow to rename a file inside a datalake
+
+        Args:
+            old_path (str): old file path
+            new_path (str): new file path
+        &#34;&#34;&#34;
         os.rename(&#39;{}/{}&#39;.format(self.dl_conn, old_path), &#39;{}/{}&#39;.format(self.dl_conn, new_path))
 
-    def move(self, data):
+    def move(self, old_path, new_path):
+        &#34;&#34;&#34;This method allow to move a file inside a datalake
+
+        Args:
+            old_path (str): old file path
+            new_path (str): new file path
+
+        Raises:
+            NotImplementedError: This implementation of a class don&#39;t use this method
+        &#34;&#34;&#34;
         raise NotImplementedError
 
     def mkdir(self, data):
+        &#34;&#34;&#34;This method allow to create a folder inside a datalake
+
+        Args:
+            data (str): folder name
+
+        Raises:
+            NotImplementedError: This implementation of a class don&#39;t use this method
+        &#34;&#34;&#34;
         raise NotImplementedError
 
     def delete(self, data):
+        &#34;&#34;&#34;This method allow to delete a file inside a datalake
+
+        Args:
+            data (str): file name
+        &#34;&#34;&#34;
         os.remove(&#39;{}/{}&#39;.format(self.dl_conn, data))</code></pre>
 </details>
 </section>
@@ -78,54 +141,112 @@ class Fake_Datalake(Datalake):
 <span>(</span><span>config_obj)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>[summary]</p>
+<div class="desc"><p>This clas implement a fake datalake to provide an example for CDC pattern</p>
+<p>Datalake construnctor constructor</p>
 <h2 id="args">Args</h2>
 <dl>
-<dt><strong><code>ABC</code></strong> :&ensp;<code>[type]</code></dt>
-<dd>[description]</dd>
-</dl>
-<p>[summary]</p>
-<h2 id="args_1">Args</h2>
-<dl>
-<dt><strong><code>config_obj</code></strong> :&ensp;<code>[type]</code></dt>
-<dd>[description]</dd>
+<dt><strong><code>config_obj</code></strong> :&ensp;<code>dict</code></dt>
+<dd>configuration object depend on implementation</dd>
 </dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class Fake_Datalake(Datalake):
+    &#34;&#34;&#34;This clas implement a fake datalake to provide an example for CDC pattern
+    &#34;&#34;&#34;
 
     def connect(self, conf_obj):
+        &#34;&#34;&#34;This method provide e way to connect a Datalake
+
+        Args:
+            conf_obj (dict): `dl_name`: datalake name
+
+        Returns:
+            str: datalake name
+        &#34;&#34;&#34;
         return conf_obj[&#39;dl_name&#39;]
 
     def disconnect(self):
+        &#34;&#34;&#34;This method allow to disconnect a Datalake, set dl_conn to None
+        &#34;&#34;&#34;
         self.dl_conn = None
 
     def read(self, data) -&gt; str:
+        &#34;&#34;&#34;This method implement a read operation
+
+        Args:
+            data (str): file name to read
+
+        Returns:
+            str: Iterator to a file
+        &#34;&#34;&#34;
         with open(&#39;{}/{}&#39;.format(self.dl_conn, data), &#39;r&#39;) as f:
             return f.read()
 
 
     def write(self, file_name, data, mod) -&gt; None:
+        &#34;&#34;&#34;This method allow to write a file inside datalake
+
+        Args:
+            file_name (str): file name
+            data (str): data to write inside a file
+            mod (str): allow mod `w` or `a`
+        &#34;&#34;&#34;
         with open(&#39;{}/{}&#39;.format(self.dl_conn, file_name), mod) as f:
             f.write(data)
 
     def ls(self, path=None) -&gt; list:
+        &#34;&#34;&#34;This method allow to get a list of all file contained inside a datalake
+
+        Args:
+            path (str, optional): [description]. path to a specific folder inside datalake. Defaults to None.
+
+        Returns:
+            list: All file inside a folder
+        &#34;&#34;&#34;
         if(path == None):
             return os.listdir(self.dl_conn)
         os.listdir(&#39;{}/{}&#39;.format(self.dl_conn, path))
 
     def rename(self, old_path:str, new_path:str) -&gt; None:
+        &#34;&#34;&#34;This method allow to rename a file inside a datalake
+
+        Args:
+            old_path (str): old file path
+            new_path (str): new file path
+        &#34;&#34;&#34;
         os.rename(&#39;{}/{}&#39;.format(self.dl_conn, old_path), &#39;{}/{}&#39;.format(self.dl_conn, new_path))
 
-    def move(self, data):
+    def move(self, old_path, new_path):
+        &#34;&#34;&#34;This method allow to move a file inside a datalake
+
+        Args:
+            old_path (str): old file path
+            new_path (str): new file path
+
+        Raises:
+            NotImplementedError: This implementation of a class don&#39;t use this method
+        &#34;&#34;&#34;
         raise NotImplementedError
 
     def mkdir(self, data):
+        &#34;&#34;&#34;This method allow to create a folder inside a datalake
+
+        Args:
+            data (str): folder name
+
+        Raises:
+            NotImplementedError: This implementation of a class don&#39;t use this method
+        &#34;&#34;&#34;
         raise NotImplementedError
 
     def delete(self, data):
+        &#34;&#34;&#34;This method allow to delete a file inside a datalake
+
+        Args:
+            data (str): file name
+        &#34;&#34;&#34;
         os.remove(&#39;{}/{}&#39;.format(self.dl_conn, data))</code></pre>
 </details>
 <h3>Ancestors</h3>
@@ -139,22 +260,30 @@ class Fake_Datalake(Datalake):
 <span>def <span class="ident">connect</span></span>(<span>self, conf_obj)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>[summary]</p>
+<div class="desc"><p>This method provide e way to connect a Datalake</p>
 <h2 id="args">Args</h2>
 <dl>
-<dt><strong><code>config_obj</code></strong> :&ensp;<code>[type]</code></dt>
-<dd>[description]</dd>
+<dt><strong><code>conf_obj</code></strong> :&ensp;<code>dict</code></dt>
+<dd><code>dl_name</code>: datalake name</dd>
 </dl>
-<h2 id="raises">Raises</h2>
+<h2 id="returns">Returns</h2>
 <dl>
-<dt><code>NotImplementedError</code></dt>
-<dd>[description]</dd>
+<dt><code>str</code></dt>
+<dd>datalake name</dd>
 </dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def connect(self, conf_obj):
+    &#34;&#34;&#34;This method provide e way to connect a Datalake
+
+    Args:
+        conf_obj (dict): `dl_name`: datalake name
+
+    Returns:
+        str: datalake name
+    &#34;&#34;&#34;
     return conf_obj[&#39;dl_name&#39;]</code></pre>
 </details>
 </dd>
@@ -162,22 +291,22 @@ class Fake_Datalake(Datalake):
 <span>def <span class="ident">delete</span></span>(<span>self, data)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>[summary]</p>
+<div class="desc"><p>This method allow to delete a file inside a datalake</p>
 <h2 id="args">Args</h2>
 <dl>
-<dt><strong><code>data</code></strong> :&ensp;<code>[type]</code></dt>
-<dd>[description]</dd>
-</dl>
-<h2 id="raises">Raises</h2>
-<dl>
-<dt><code>NotImplementedError</code></dt>
-<dd>[description]</dd>
+<dt><strong><code>data</code></strong> :&ensp;<code>str</code></dt>
+<dd>file name</dd>
 </dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def delete(self, data):
+    &#34;&#34;&#34;This method allow to delete a file inside a datalake
+
+    Args:
+        data (str): file name
+    &#34;&#34;&#34;
     os.remove(&#39;{}/{}&#39;.format(self.dl_conn, data))</code></pre>
 </details>
 </dd>
@@ -185,17 +314,14 @@ class Fake_Datalake(Datalake):
 <span>def <span class="ident">disconnect</span></span>(<span>self)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>[summary]</p>
-<h2 id="raises">Raises</h2>
-<dl>
-<dt><code>NotImplementedError</code></dt>
-<dd>[description]</dd>
-</dl></div>
+<div class="desc"><p>This method allow to disconnect a Datalake, set dl_conn to None</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def disconnect(self):
+    &#34;&#34;&#34;This method allow to disconnect a Datalake, set dl_conn to None
+    &#34;&#34;&#34;
     self.dl_conn = None</code></pre>
 </details>
 </dd>
@@ -203,27 +329,30 @@ class Fake_Datalake(Datalake):
 <span>def <span class="ident">ls</span></span>(<span>self, path=None) ‑> list</span>
 </code></dt>
 <dd>
-<div class="desc"><p>[summary]</p>
+<div class="desc"><p>This method allow to get a list of all file contained inside a datalake</p>
 <h2 id="args">Args</h2>
 <dl>
-<dt><strong><code>path</code></strong> :&ensp;<code>[type]</code>, optional</dt>
-<dd>[description]. Defaults to None.</dd>
-</dl>
-<h2 id="raises">Raises</h2>
-<dl>
-<dt><code>NotImplementedError</code></dt>
-<dd>[description]</dd>
+<dt><strong><code>path</code></strong> :&ensp;<code>str</code>, optional</dt>
+<dd>[description]. path to a specific folder inside datalake. Defaults to None.</dd>
 </dl>
 <h2 id="returns">Returns</h2>
 <dl>
 <dt><code>list</code></dt>
-<dd>[description]</dd>
+<dd>All file inside a folder</dd>
 </dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def ls(self, path=None) -&gt; list:
+    &#34;&#34;&#34;This method allow to get a list of all file contained inside a datalake
+
+    Args:
+        path (str, optional): [description]. path to a specific folder inside datalake. Defaults to None.
+
+    Returns:
+        list: All file inside a folder
+    &#34;&#34;&#34;
     if(path == None):
         return os.listdir(self.dl_conn)
     os.listdir(&#39;{}/{}&#39;.format(self.dl_conn, path))</code></pre>
@@ -233,45 +362,64 @@ class Fake_Datalake(Datalake):
 <span>def <span class="ident">mkdir</span></span>(<span>self, data)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>[summary]</p>
+<div class="desc"><p>This method allow to create a folder inside a datalake</p>
 <h2 id="args">Args</h2>
 <dl>
-<dt><strong><code>data</code></strong> :&ensp;<code>[type]</code></dt>
-<dd>[description]</dd>
+<dt><strong><code>data</code></strong> :&ensp;<code>str</code></dt>
+<dd>folder name</dd>
 </dl>
 <h2 id="raises">Raises</h2>
 <dl>
 <dt><code>NotImplementedError</code></dt>
-<dd>[description]</dd>
+<dd>This implementation of a class don't use this method</dd>
 </dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def mkdir(self, data):
+    &#34;&#34;&#34;This method allow to create a folder inside a datalake
+
+    Args:
+        data (str): folder name
+
+    Raises:
+        NotImplementedError: This implementation of a class don&#39;t use this method
+    &#34;&#34;&#34;
     raise NotImplementedError</code></pre>
 </details>
 </dd>
 <dt id="src.fake_datalake.Fake_Datalake.move"><code class="name flex">
-<span>def <span class="ident">move</span></span>(<span>self, data)</span>
+<span>def <span class="ident">move</span></span>(<span>self, old_path, new_path)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>[summary]</p>
+<div class="desc"><p>This method allow to move a file inside a datalake</p>
 <h2 id="args">Args</h2>
 <dl>
-<dt><strong><code>data</code></strong> :&ensp;<code>[type]</code></dt>
-<dd>[description]</dd>
+<dt><strong><code>old_path</code></strong> :&ensp;<code>str</code></dt>
+<dd>old file path</dd>
+<dt><strong><code>new_path</code></strong> :&ensp;<code>str</code></dt>
+<dd>new file path</dd>
 </dl>
 <h2 id="raises">Raises</h2>
 <dl>
 <dt><code>NotImplementedError</code></dt>
-<dd>[description]</dd>
+<dd>This implementation of a class don't use this method</dd>
 </dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def move(self, data):
+<pre><code class="python">def move(self, old_path, new_path):
+    &#34;&#34;&#34;This method allow to move a file inside a datalake
+
+    Args:
+        old_path (str): old file path
+        new_path (str): new file path
+
+    Raises:
+        NotImplementedError: This implementation of a class don&#39;t use this method
+    &#34;&#34;&#34;
     raise NotImplementedError</code></pre>
 </details>
 </dd>
@@ -279,27 +427,30 @@ class Fake_Datalake(Datalake):
 <span>def <span class="ident">read</span></span>(<span>self, data) ‑> str</span>
 </code></dt>
 <dd>
-<div class="desc"><p>[summary]</p>
+<div class="desc"><p>This method implement a read operation</p>
 <h2 id="args">Args</h2>
 <dl>
-<dt><strong><code>data</code></strong> :&ensp;<code>[type]</code></dt>
-<dd>[description]</dd>
-</dl>
-<h2 id="raises">Raises</h2>
-<dl>
-<dt><code>NotImplementedError</code></dt>
-<dd>[description]</dd>
+<dt><strong><code>data</code></strong> :&ensp;<code>str</code></dt>
+<dd>file name to read</dd>
 </dl>
 <h2 id="returns">Returns</h2>
 <dl>
 <dt><code>str</code></dt>
-<dd>[description]</dd>
+<dd>Iterator to a file</dd>
 </dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def read(self, data) -&gt; str:
+    &#34;&#34;&#34;This method implement a read operation
+
+    Args:
+        data (str): file name to read
+
+    Returns:
+        str: Iterator to a file
+    &#34;&#34;&#34;
     with open(&#39;{}/{}&#39;.format(self.dl_conn, data), &#39;r&#39;) as f:
         return f.read()</code></pre>
 </details>
@@ -308,24 +459,25 @@ class Fake_Datalake(Datalake):
 <span>def <span class="ident">rename</span></span>(<span>self, old_path: str, new_path: str) ‑> NoneType</span>
 </code></dt>
 <dd>
-<div class="desc"><p>[summary]</p>
+<div class="desc"><p>This method allow to rename a file inside a datalake</p>
 <h2 id="args">Args</h2>
 <dl>
 <dt><strong><code>old_path</code></strong> :&ensp;<code>str</code></dt>
-<dd>[description]</dd>
+<dd>old file path</dd>
 <dt><strong><code>new_path</code></strong> :&ensp;<code>str</code></dt>
-<dd>[description]</dd>
-</dl>
-<h2 id="raises">Raises</h2>
-<dl>
-<dt><code>NotImplementedError</code></dt>
-<dd>[description]</dd>
+<dd>new file path</dd>
 </dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def rename(self, old_path:str, new_path:str) -&gt; None:
+    &#34;&#34;&#34;This method allow to rename a file inside a datalake
+
+    Args:
+        old_path (str): old file path
+        new_path (str): new file path
+    &#34;&#34;&#34;
     os.rename(&#39;{}/{}&#39;.format(self.dl_conn, old_path), &#39;{}/{}&#39;.format(self.dl_conn, new_path))</code></pre>
 </details>
 </dd>
@@ -333,26 +485,28 @@ class Fake_Datalake(Datalake):
 <span>def <span class="ident">write</span></span>(<span>self, file_name, data, mod) ‑> NoneType</span>
 </code></dt>
 <dd>
-<div class="desc"><p>[summary]</p>
+<div class="desc"><p>This method allow to write a file inside datalake</p>
 <h2 id="args">Args</h2>
 <dl>
-<dt><strong><code>file_name</code></strong> :&ensp;<code>[type]</code></dt>
-<dd>[description]</dd>
-<dt><strong><code>data</code></strong> :&ensp;<code>[type]</code></dt>
-<dd>[description]</dd>
-<dt><strong><code>mod</code></strong> :&ensp;<code>[type]</code></dt>
-<dd>[description]</dd>
-</dl>
-<h2 id="raises">Raises</h2>
-<dl>
-<dt><code>NotImplementedError</code></dt>
-<dd>[description]</dd>
+<dt><strong><code>file_name</code></strong> :&ensp;<code>str</code></dt>
+<dd>file name</dd>
+<dt><strong><code>data</code></strong> :&ensp;<code>str</code></dt>
+<dd>data to write inside a file</dd>
+<dt><strong><code>mod</code></strong> :&ensp;<code>str</code></dt>
+<dd>allow mod <code>w</code> or <code>a</code></dd>
 </dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def write(self, file_name, data, mod) -&gt; None:
+    &#34;&#34;&#34;This method allow to write a file inside datalake
+
+    Args:
+        file_name (str): file name
+        data (str): data to write inside a file
+        mod (str): allow mod `w` or `a`
+    &#34;&#34;&#34;
     with open(&#39;{}/{}&#39;.format(self.dl_conn, file_name), mod) as f:
         f.write(data)</code></pre>
 </details>
