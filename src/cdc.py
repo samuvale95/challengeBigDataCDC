@@ -18,7 +18,7 @@ class CDC(ABC):
 
         Args:
             data_lake ([Datalake]): Datalake object
-            data_base (Databse): Database object
+            data_base (Database): Database object
             config_obj (dict): Configuration object `changes_path` is path for tmp folder, `arch_type` id the architecture over dcd work 'log_data', 'registry_data'
         """
         self.conf=config_obj
@@ -26,14 +26,14 @@ class CDC(ABC):
         self.data_base=data_base
 
     def send_to_dl(self) -> None:
-        """Function that send file from tmp folder to datalake inside a transaction. If something fail during this operation Datalake is retore to the previos state, and another attempt will be make.
+        """Function that send file from tmp folder to datalake inside a transaction. If something fail during this operation Datalake is retore to the previous state, and another attempt will be make.
 
         Algorithm explanation
         ---------------------
 
         This algorithms take every file inside tmp folder and one by one is send to datalake and is save with .tmp extension.
         In the end, when all file will be copy on datalake, all file with .tmp extension will be rename with correct one.ABC
-        If for any reason some file fail to send or some exceptio was rais, the operation will be interrupt and all file with .tmp extension on datalake will be deleted.
+        If for any reason some file fail to send or some exception was raise, the operation will be interrupt and all file with .tmp extension on datalake will be deleted.
         The send operation will make another attemp until all file will be sent.
         """
         while(True):
@@ -78,7 +78,7 @@ class CDC(ABC):
         raise NotImplementedError
 
     def create_file(self, file_name:str, value:dict, operation:str=None) -> None:
-        """This class call `file_struct` method, and save a file with capure changes on temporary folder.
+        """This class call `file_struct` method, and save a file with capture changes on temporary folder.
 
         Args:
             file_name (str):

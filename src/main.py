@@ -24,11 +24,11 @@ if __name__ == "__main__":
         #Datalake is empty, no changes detected yet
         test_dl_num_files(0, 'Test empty DL')
 
-        #DB is firt time run, all db line will be processed and put on datalake
+        #DB is first time run, all db line will be processed and put on datalake
         cdc.capture_changes('')
 
         #20 line for datalake was changed
-        test_dl_num_files(21, 'Firt DB Check')
+        test_dl_num_files(21, 'First DB Check')
 
         #insert 3 line, 3 file will be insert on datalake
         for i in range(0, 3):
