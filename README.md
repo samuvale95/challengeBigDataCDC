@@ -20,23 +20,23 @@ The maximum point achievable is +2, but this time I'll start to given part of th
 ## Solution
 
 ### DB class
-	- connessione db
-	- disconnessione db
-	- Get method che restituisce tutte le righe del db
+	- db connection.
+	- db disconnection.
+	- method to obtain table rows.
 
 ### DL Class
-	- connessione db
-	- disconnessione db
-	- file system operation
-	- send to dl method
-	- modify file structure method
+	- dl connection.
+	- dl disconnection.
+	- file system operation.
+	- method to send to dl.
+	- method to modify file structure.
 
 ### CDC Class
 
-	- connessione a DL e DB
-	- send data to dl in a consistency way (transaction)
-	- change capture method
-	- timing set method
+	- db,dl connection.
+	- send data to dl in a consistency way (transaction).
+	- change capture method(CDC).
+	- method to set time.
 
 ---
 
@@ -51,6 +51,8 @@ The maximum point achievable is +2, but this time I'll start to given part of th
 	- test INSERT, UPDATE, REMOVE
 - Refactor all code
 - Resolve bug on UPDATE
+
+---
 
 ### Important Note
 To execute succesfully you have to create a directory named **tmp_dl** and put it in the *src* directory.
