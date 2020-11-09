@@ -8,7 +8,7 @@ class Database(ABC):
         """Database constructor
 
         Args:
-            config_obj (dict): configuration object depents on implementation
+            config_obj (dict): configuration object depends on implementation
         """
         self.db_conn = self.connect(config_obj)
 
@@ -35,7 +35,7 @@ class Database(ABC):
 
     @abstractmethod
     def exec(self, query:str) -> list:
-        """This method allow to execute a query to databse
+        """This method allow to execute a query to database
 
         Args:
             query (str): query string

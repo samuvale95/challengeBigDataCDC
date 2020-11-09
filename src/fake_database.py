@@ -3,13 +3,13 @@ from random import randint
 import os
 
 class Fake_Database(Database):
-    """This clas implement a fake database to provide an example for CDC pattern
+    """This class implement a fake database to provide an example for CDC pattern
     """
     def connect(self, config_obj):
         """[summary]
 
         Args:
-            config_obj (dict): `db_name`: databse name
+            config_obj (dict): `db_name`: database name
 
         Returns:
             str: return a db_name use like a connection object
@@ -22,7 +22,7 @@ class Fake_Database(Database):
         self.db_conn = None
 
     def exec(self, query:str) -> list:
-        """This method execute a fake query and return all databse row
+        """This method execute a fake query and return all database row
 
         Args:
             query (str): Not use for this example

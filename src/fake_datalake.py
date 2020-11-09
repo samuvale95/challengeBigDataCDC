@@ -2,7 +2,7 @@ from datalake import Datalake
 import os
 
 class Fake_Datalake(Datalake):
-    """This clas implement a fake datalake to provide an example for CDC pattern
+    """This class implement a fake datalake to provide an example for CDC pattern
     """
 
     def connect(self, conf_obj):

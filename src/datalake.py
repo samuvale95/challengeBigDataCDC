@@ -5,7 +5,7 @@ class Datalake(ABC):
     """
 
     def __init__(self, config_obj):
-        """Datalake construnctor constructor
+        """Datalake constructor
 
         Args:
             config_obj (dict): configuration object depend on implementation
