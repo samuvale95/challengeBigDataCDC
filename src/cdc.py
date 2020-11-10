@@ -10,7 +10,7 @@ class CDC(ABC):
     It will be create a file with 'create_file' method for every change happened on Database.
     The files will be put on a temporary directory (path of this folder will be defined on 'config_object' parameter).
     In the end all files contained in folder will be send to Data Lake with 'send_to_dl' method.
-    If something will go wrong during execution of method, the previous state off datatlake will be preseve and another attempt will be make.
+    If something will go wrong during execution of method, the previous state off datalake will be preseve and another attempt will be make.
     """
 
     def __init__(self, data_lake, data_base, config_obj:dict):
@@ -107,7 +107,7 @@ class CDC(ABC):
         return False
 
     def __registry_data(self, table_name:str) -> None:
-        """This method apply algorith to capture changes from db, registry data table is a db table where is not present time stamp on inserted value.
+        """This method apply algorithm to capture changes from db, registry data table is a db table where is not present time stamp on inserted value.
 
         Algorithm explanation
         ---------------------
@@ -157,7 +157,7 @@ class CDC(ABC):
         ---------------------
 
         The algorithms take a `sync` file from datalake a from that file take last time stamp checked.
-        With this time stamp make a query on db and take all data where insert data is grather than timestamp toke from `sync` file.
+        With this time stamp make a query on db and take all data where insert data is greather than timestamp toke from `sync` file.
         Row by row from query result is create a file and add to a tmp folder.
 
         Args:
@@ -175,7 +175,7 @@ class CDC(ABC):
         Args:
             table_name (str): name of table over capture the changes
         """
-        os.mkdir(self.conf['changes_path'])
+        os.makedirs(self.conf['changes_path'], exist_ok=True)
         if(self.conf['arch_type'] == 'log_data'): self.__log_data(table_name)
         else: self.__registry_data(table_name)
         os.remove
